@@ -1,7 +1,9 @@
 package com.spring.study.logger;
 
-public class ConsoleEventLogger {
-    public void logEvent(String msg) {
-        System.out.println(msg);
+import com.spring.study.model.Event;
+
+public class ConsoleEventLogger implements EventLogger{
+    public void logEvent(Event event) {
+        System.out.println(event);
     }
 }

@@ -1,22 +1,36 @@
 package com.spring.study;
 
 import com.spring.study.logger.ConsoleEventLogger;
+import com.spring.study.logger.EventLogger;
 import com.spring.study.model.Client;
+import com.spring.study.model.Event;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Date;
 
 public class Application {
     private Client client;
-    private ConsoleEventLogger eventLogger;
-    public static void main(String[] args) {
-    Application app = new Application();
-    app.setClient(new Client("1", "John Smith"));
-    app.setEventLogger(new ConsoleEventLogger());
+    private EventLogger eventLogger;
 
-    app.logEvent("Some event for user 1");
+    public static void main(String[] args) {
+        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring-context.xml");
+        Application app = ctx.getBean(Application.class);
+        app.logEvent(ctx.getBean(Event.class));
+        app.logEvent(ctx.getBean(Event.class));
+        app.logEvent(ctx.getBean(Event.class));
+        app.logEvent(ctx.getBean(Event.class));
+        ctx.close();
     }
 
-    public void logEvent(String msg){
-        String message = msg.replaceAll(client.getId(), client.getFullName());
-        eventLogger.logEvent(message);
+    public Application(Client client, EventLogger eventLogger) {
+        this.client = client;
+        this.eventLogger = eventLogger;
+    }
+
+    private void logEvent(Event event) {
+        eventLogger.logEvent(event);
     }
 
     public void setClient(Client client) {
